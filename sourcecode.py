@@ -19,6 +19,7 @@ scope = [
 
 # Ambil JSON string dari Streamlit secrets
 json_str = st.secrets["gcp_service_account"]["json"]
+json_str = json_str.encode().decode('unicode_escape')  # ubah \\n menjadi \n
 
 # Parse string menjadi dictionary
 creds_dict = json.loads(json_str)
