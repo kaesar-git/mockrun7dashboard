@@ -6,11 +6,14 @@ import pandas as pd
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 from datetime import datetime
+import json
+from io import StringIO
 
 # ========== KONFIGURASI GOOGLE SHEETS ==========
 scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
-creds = ServiceAccountCredentials.from_json_keyfile_name(
-    r"C:\\Users\\kaesar\\Downloads\\Dashboard Countdown Project\\dashboard-mockrun-7-32e99c61b685.json", scope)
+# Ambil file JSON dari streamlit secrets
+json_str = st.secrets["gcp_service_account"]
+creds = ServiceAccountCredentials.from_json_keyfile_dict(json.loads(json_str), scope)
 client = gspread.authorize(creds)
 sheet = client.open("Dashboard MR7-Control").worksheet("Sheet1")
 data = sheet.get_all_records()
