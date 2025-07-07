@@ -13,7 +13,9 @@ from io import StringIO
 scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
 # Ambil file JSON dari streamlit secrets
 json_str = st.secrets["gcp_service_account"]
-creds = ServiceAccountCredentials.from_json_keyfile_dict(json.loads(json_str), scope)
+creds_dict = st.secrets["gcp_service_account"]
+creds_json = json.loads(json.dumps(creds_dict))  # convert to json string, then back to dict
+creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_json, scope)
 client = gspread.authorize(creds)
 sheet = client.open("Dashboard MR7-Control").worksheet("Sheet1")
 data = sheet.get_all_records()
