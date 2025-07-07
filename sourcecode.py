@@ -10,9 +10,6 @@ import json
 from io import StringIO
 
 # ========== KONFIGURASI GOOGLE SHEETS ==========
-import json
-from oauth2client.service_account import ServiceAccountCredentials
-import gspread
 
 # Scope akses Google Sheets dan Drive
 scope = [
@@ -27,7 +24,7 @@ json_str = st.secrets["gcp_service_account"]["json"]
 creds_dict = json.loads(json_str)
 
 # Buat credential
-creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, scope)
+credentials = service_account.Credentials.from_service_account_info(creds_dict)
 
 # Koneksi ke spreadsheet
 client = gspread.authorize(creds)
