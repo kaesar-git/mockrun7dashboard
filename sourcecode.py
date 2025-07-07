@@ -10,15 +10,31 @@ import json
 from io import StringIO
 
 # ========== KONFIGURASI GOOGLE SHEETS ==========
-scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
-# Ambil file JSON dari streamlit secrets
-import ast
-json_str = st.secrets["gcp_service_account"]
-creds_dict = ast.literal_eval(json_str)  # ubah dari string ke dict
+import json
+from oauth2client.service_account import ServiceAccountCredentials
+import gspread
+
+# Scope akses Google Sheets dan Drive
+scope = [
+    "https://spreadsheets.google.com/feeds",
+    "https://www.googleapis.com/auth/drive"
+]
+
+# Ambil JSON string dari Streamlit secrets
+json_str = st.secrets["gcp_service_account"]["json"]
+
+# Parse string menjadi dictionary
+creds_dict = json.loads(json_str)
+
+# Buat credential
 creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, scope)
+
+# Koneksi ke spreadsheet
 client = gspread.authorize(creds)
 sheet = client.open("Dashboard MR7-Control").worksheet("Sheet1")
 data = sheet.get_all_records()
+
+# Ubah ke DataFrame
 df = pd.DataFrame(data)
 
 # ========== KONFIGURASI HALAMAN ==========
