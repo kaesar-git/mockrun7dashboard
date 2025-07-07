@@ -4,7 +4,7 @@ import streamlit as st
 from streamlit_autorefresh import st_autorefresh
 import pandas as pd
 import gspread
-from oauth2client.service_account import ServiceAccountCredentials
+from google.oauth2 import service_account
 from datetime import datetime
 import json
 from io import StringIO
@@ -20,17 +20,11 @@ scope = [
 # Ambil JSON string dari Streamlit secrets
 json_str = st.secrets["gcp_service_account"]["json"]
 json_str = json_str.encode().decode('unicode_escape')  # ubah \\n menjadi \n
-
-# Parse string menjadi dictionary
-json_str = st.secrets["gcp_service_account"]["json"]
-json_str = json_str.encode().decode('unicode_escape')  # ubah \\n jadi \n
 creds_dict = json.loads(json_str)
-
-# Buat credential
 credentials = service_account.Credentials.from_service_account_info(creds_dict)
 
 # Koneksi ke spreadsheet
-client = gspread.authorize(creds)
+client = gspread.authorize(credentials)
 sheet = client.open("Dashboard MR7-Control").worksheet("Sheet1")
 data = sheet.get_all_records()
 
