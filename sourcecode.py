@@ -22,6 +22,8 @@ json_str = st.secrets["gcp_service_account"]["json"]
 json_str = json_str.encode().decode('unicode_escape')  # ubah \\n menjadi \n
 
 # Parse string menjadi dictionary
+json_str = st.secrets["gcp_service_account"]["json"]
+json_str = json_str.encode().decode('unicode_escape')  # ubah \\n jadi \n
 creds_dict = json.loads(json_str)
 
 # Buat credential
